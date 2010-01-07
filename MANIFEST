@@ -20,3 +20,4 @@ t/001_basic.t
 t/002_basic_returning_response.t
 t/003_basic_returning_psgi.t
 t/010_basic_target_objects.t
+t/020_custom_request.t
