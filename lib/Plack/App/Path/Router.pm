@@ -2,7 +2,7 @@ package Plack::App::Path::Router;
 use Moose;
 use MooseX::NonMoose;
 
-our $VERSION   = '0.03';
+our $VERSION   = '0.04';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use Plack::Request;
@@ -22,7 +22,7 @@ has 'request_class' => (
 );
 
 sub call {
-    my($self, $env) = @_;
+    my ($self, $env) = @_;
 
     $env->{'plack.router'} = $self->router;
 
@@ -179,7 +179,7 @@ Stevan Little E<lt>stevan.little@iinteractive.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2009, 2010 Infinity Interactive, Inc.
+Copyright 2009-2011 Infinity Interactive, Inc.
 
 L<http://www.iinteractive.com>
 
