@@ -1,35 +1,13 @@
-Plack::App::Path::Router version 0.04
-=====================================
 
-See the individual module documentation for more information
 
-INSTALLATION
+This archive contains the distribution Plack-App-Path-Router,
+version 0.05:
 
-To install this module type the following:
+  A Plack component for dispatching with Path::Router
 
-   perl Makefile.PL
-   make
-   make test
-   make install
+This software is copyright (c) 2012 by Infinity Interactive.
 
-DEPENDENCIES
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
-This module requires these other modules and libraries:
-
-    Plack
-    Plack::Request
-    Moose
-    MooseX::NonMoose
-    Path::Router
-
-COPYRIGHT AND LICENCE
-
-Stevan Little <stevan.little@iinteractive.com>
-
-Copyright 2009-2011 Infinity Interactive, Inc.
-
-http://www.iinteractive.com
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 

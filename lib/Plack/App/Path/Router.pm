@@ -1,19 +1,20 @@
 package Plack::App::Path::Router;
-use Moose;
-use MooseX::NonMoose;
+BEGIN {
+  $Plack::App::Path::Router::AUTHORITY = 'cpan:STEVAN';
+}
+{
+  $Plack::App::Path::Router::VERSION = '0.05';
+}
+use Moose 0.90;
+use MooseX::NonMoose 0.07;
+# ABSTRACT: A Plack component for dispatching with Path::Router
 
-our $VERSION   = '0.04';
-our $AUTHORITY = 'cpan:STEVAN';
+use Plack::Request 0.08;
 
-use Plack::Request;
+extends 'Plack::App::Path::Router::Custom';
 
-extends 'Plack::Component';
 
-has 'router' => (
-    is       => 'ro',
-    isa      => 'Path::Router',
-    required => 1,
-);
+
 
 has 'request_class' => (
     is      => 'ro',
@@ -21,66 +22,63 @@ has 'request_class' => (
     default => sub { 'Plack::Request' },
 );
 
-sub call {
-    my ($self, $env) = @_;
+has '+new_request' => (
+    default => sub {
+        my $self = shift;
+        sub {
+            $self->request_class->new(@_);
+        };
+    },
+);
 
-    $env->{'plack.router'} = $self->router;
+has '+target_to_app' => (
+    default => sub {
+        sub {
+            my ($target) = @_;
 
-    my $req = $self->request_class->new( $env );
-
-    my $match = $self->router->match( $req->path_info );
-
-    if ( $match ) {
-        $env->{'plack.router.match'} = $match;
-
-        my $route   = $match->route;
-        my $mapping = $match->mapping;
-
-        my @args;
-        foreach my $component ( @{ $route->components } ) {
-            my $name = $route->get_component_name( $component );
-            next unless $name;
-            if (my $value = $mapping->{ $name }) {
-                push @args => $value;
-                $env->{ ('plack.router.match.' . $name) } = $value;
+            if (blessed $target && $target->can('execute')) {
+                return sub { $target->execute(@_) };
             }
-        }
+            else {
+                return $target;
+            }
+        };
+    },
+);
 
-        my $target = $match->target;
+has '+handle_response' => (
+    default => sub {
+        sub {
+            my ($res) = @_;
 
-        my $res;
-        if (blessed $target && $target->can('execute')) {
-            $res = $target->execute( $req, @args );
-        }
-        else {
-            $res = $target->( $req, @args );
-        }
-
-        if ( blessed $res && $res->can('finalize') ) {
-            return $res->finalize;
-        }
-        elsif ( not ref $res ) {
-            return [ 200, [ 'Content-Type' => 'text/html' ], [ $res ] ];
-        }
-        else {
-            return $res;
-        }
-    }
-
-    return [ 404, [ 'Content-Type' => 'text/html' ], [ 'Not Found' ] ];
-}
+            if ( blessed $res && $res->can('finalize') ) {
+                return $res->finalize;
+            }
+            elsif ( not ref $res ) {
+                return [ 200, [ 'Content-Type' => 'text/html' ], [ $res ] ];
+            }
+            else {
+                return $res;
+            }
+        };
+    },
+);
 
 __PACKAGE__->meta->make_immutable;
+no Moose;
 
-no Moose; 1;
+1;
 
 __END__
-
 =pod
 
 =head1 NAME
 
 Plack::App::Path::Router - A Plack component for dispatching with Path::Router
+
+=head1 VERSION
+
+version 0.05
 
 =head1 SYNOPSIS
 
@@ -153,37 +151,26 @@ source (all ~75 lines of it).
 
 =head1 ATTRIBUTES
 
-=over 4
-
-=item I<router>
+=head2 router
 
 This is a required attribute and must be an instance of L<Path::Router>.
 
-=item I<request_class>
+=head2 request_class
 
 This is a class name used to create the request object. It defaults to
 L<Plack::Request> but anything that will accept a PSGI-style C<$env> in
 the constructor and respond correctly to C<path_info> will work.
 
-=back
-
-=head1 BUGS
-
-All complex software has bugs lurking in it, and this module is no
-exception. If you find a bug please either email me, or add the bug
-to cpan-RT.
-
 =head1 AUTHOR
 
-Stevan Little E<lt>stevan.little@iinteractive.comE<gt>
+Stevan Little <stevan.little at iinteractive.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2009-2011 Infinity Interactive, Inc.
+This software is copyright (c) 2012 by Infinity Interactive.
 
-L<http://www.iinteractive.com>
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut
+
