@@ -2,9 +2,7 @@ package Plack::App::Path::Router::PSGI;
 BEGIN {
   $Plack::App::Path::Router::PSGI::AUTHORITY = 'cpan:STEVAN';
 }
-{
-  $Plack::App::Path::Router::PSGI::VERSION = '0.05';
-}
+$Plack::App::Path::Router::PSGI::VERSION = '0.06';
 use Moose 0.90;
 use MooseX::NonMoose 0.07;
 # ABSTRACT: A Plack component for dispatching with Path::Router to Pure PSGI targets
@@ -31,7 +29,10 @@ no Moose;
 1;
 
 __END__
+
 =pod
+
+=encoding UTF-8
 
 =head1 NAME
 
@@ -39,7 +40,7 @@ Plack::App::Path::Router::PSGI - A Plack component for dispatching with Path::Ro
 
 =head1 VERSION
 
-version 0.05
+version 0.06
 
 =head1 SYNOPSIS
 
@@ -128,10 +129,9 @@ Stevan Little <stevan.little at iinteractive.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2012 by Infinity Interactive.
+This software is copyright (c) 2014 by Infinity Interactive.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-

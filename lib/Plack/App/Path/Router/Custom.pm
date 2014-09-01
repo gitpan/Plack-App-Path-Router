@@ -2,9 +2,7 @@ package Plack::App::Path::Router::Custom;
 BEGIN {
   $Plack::App::Path::Router::Custom::AUTHORITY = 'cpan:STEVAN';
 }
-{
-  $Plack::App::Path::Router::Custom::VERSION = '0.05';
-}
+$Plack::App::Path::Router::Custom::VERSION = '0.06';
 use Moose 0.90;
 use MooseX::NonMoose 0.07;
 # ABSTRACT: A Plack component for dispatching with Path::Router
@@ -83,7 +81,10 @@ sub call {
         return $self->handle_response( $res, $req );
     }
 
-    return [ 404, [ 'Content-Type' => 'text/html' ], [ 'Not Found' ] ];
+    return $self->handle_response(
+      [ 404, [ 'Content-Type' => 'text/html' ], [ 'Not Found' ] ] ,
+      $req ,
+    );
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -93,7 +94,10 @@ no Moose;
 1;
 
 __END__
+
 =pod
+
+=encoding UTF-8
 
 =head1 NAME
 
@@ -101,7 +105,7 @@ Plack::App::Path::Router::Custom - A Plack component for dispatching with Path::
 
 =head1 VERSION
 
-version 0.05
+version 0.06
 
 =head1 SYNOPSIS
 
@@ -229,10 +233,9 @@ Stevan Little <stevan.little at iinteractive.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2012 by Infinity Interactive.
+This software is copyright (c) 2014 by Infinity Interactive.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
